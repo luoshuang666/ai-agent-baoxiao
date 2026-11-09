@@ -2,6 +2,9 @@
 
 公司差旅、报销、发票制度的问答工具。基于 Chroma 检索和 DeepSeek，回答必须带条款出处，金额由代码计算，没有依据时拒答。
 
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+
 技术栈：Python、LangChain、LangGraph、Chroma、BM25（jieba）、Streamlit、DeepSeek、硅基流动 Embedding。
 
 ## 解决的问题
@@ -10,15 +13,32 @@
 - 差旅制度有 2024 和 2025 两个版本，金额不同，容易混用；
 - 住宿、餐补、交通的限额要按职级和城市查表再算，人工容易算错。
 
-## 功能
+## 示例
 
-- 制度问答：回答带条款路径和原文片段；
-- 版本切换：2024 / 2025 两版隔离，同一问题答案不同；
-- 标准查表与算账：住宿上限、超支金额、餐补、交通额度由工具计算；
-- 岗位映射：不知道职级时按岗位名称映射（如「高级测试工程师」→ P7）；
-- 材料预检：判断住宿发票、超标审批是否齐全，只提示不提交；
-- 多轮对话：记住职级、城市等条件，窗口外的信息用槽位保存；
-- 日志：每次问答有请求号和结构化记录，出错可定位。
+**问：我是 P6，去上海出差 3 晚，酒店 750 一晚，能报多少？**
+
+```
+直接回答：P6 在上海（一线）住宿上限 600 元/晚，3 晚共可报 1800 元；
+         实际 750×3=2250 元，超出 450 元需自理，想报销需事前审批。
+怎么操作：1. 订 600 元/晚以内；2. 若已订 750，出发前提交超标申请；
+         3. 索取增值税专用发票，核对抬头与税号。
+依据：标准速查表 P5-P6/一线=600；差旅制度 3.2 住宿费；4.3 超标处理。
+需要确认：是否已提交超标审批？
+```
+
+**问：那 P7 呢？**
+
+```
+直接回答：P7 及以上、M 序列在上海（一线）住宿上限 800 元/晚。
+```
+
+第二问没有重复城市和天数，条件来自上一轮槽位。
+
+**问：出差可以坐飞机头等舱吗？**
+
+```
+直接回答：制度中没有写明舱位等级标准，无法判断头等舱是否可坐，建议联系 HR 确认。
+```
 
 ## 工作流程
 
@@ -33,6 +53,29 @@ agent.py              模型选择工具，工具返回带编号的片段
    │
    ▼
 答案 + 引用 + 决策轨迹  →  app.py（Streamlit） / obs.py（日志）
+```
+
+## 架构
+
+```mermaid
+flowchart TD
+    U[用户提问] --> A[Streamlit app.py]
+    A --> B[answer: 清空状态、记槽位]
+    B --> C{LangGraph ReAct Agent}
+    C -->|search_policy| D[Chroma + BM25 检索]
+    C -->|lookup_standard| E[标准表 CSV]
+    C -->|calc_reimbursement| F[金额计算]
+    C -->|lookup_level| G[岗位职级对照表]
+    C -->|check_claim_materials| H[材料预检]
+    D --> C
+    E --> C
+    F --> C
+    G --> C
+    H --> C
+    C --> I[答案 + 引用]
+    I --> J[证据门控]
+    J --> K[日志 obs.py]
+    J --> A
 ```
 
 ## 关键设计
@@ -92,6 +135,26 @@ agent.py              模型选择工具，工具返回带编号的片段
 ### 日志
 
 每次问答写一行 JSON 到 `storage/logs/app.jsonl`，字段包括请求号、耗时、工具列表、引用数、是否通过门控。异常记录堆栈，界面只显示 8 位请求号。
+
+## 技术选型
+
+| 组件 | 选择 | 备选 | 原因 |
+|---|---|---|---|
+| 向量库 | Chroma | FAISS、pgvector | 自带 metadata 过滤和持久化，45 块数据量不需要独立数据库 |
+| 检索 | 向量 + BM25 | 纯向量 | 金额、条款号、专票等 token 向量容易漂 |
+| 融合 | RRF | 加权求和 | 两路分数量纲不同，RRF 只看名次，不用调权重 |
+| Agent | LangGraph | AgentExecutor | 需要 checkpointer 做记忆、pre_model_hook 做窗口裁剪 |
+| 记忆 | MemorySaver | SqliteSaver | 演示场景单进程，重启可重建；持久化留了接入点 |
+| 界面 | Streamlit | React | 单文件可跑，适合验证效果；不足是没有登录和并发能力 |
+
+## 实现中遇到的问题
+
+| 问题 | 现象 | 处理 |
+|---|---|---|
+| 窗口裁剪切断工具消息 | 报 400 `tool message must be a response to a preceding message with tool_calls` | 裁剪时按 human 消息边界切，保证 AI 的 tool_calls 与工具返回成对 |
+| 中文分词不完整 | 「到账」被切成「到 / 账」，BM25 匹配不到制度里的词 | 靠向量召回和低分时的 query 改写兜底；彻底解决需要加自定义词典 |
+| sqlite 只读 | 报 `attempt to write a readonly database` | 检查目录权限；必要时用 `CHROMA_DIR` 换到英文无空格路径 |
+| k 值偏小 | k=4 时 Recall 只有 70% | 消融后改为 k=6，Recall 85% |
 
 ## 快速开始
 
@@ -162,6 +225,13 @@ skeleton/
 - 不提供提交功能，报销单仍需在 OA 中提交；
 - 仅支持 Markdown、CSV、XLSX，PDF 需要额外解析。
 
+## 后续计划
+
+- 逐句校验引用是否支持结论，补上 groundedness；
+- 记忆改用 SqliteSaver，跨重启保留；
+- 评测集扩到 100 条，加入引用准确率和人工抽检；
+- 按岗位/部门做权限过滤。
+
 ## 常见问题
 
 | 现象 | 处理 |
@@ -170,3 +240,7 @@ skeleton/
 | 报模型不存在 | 确认 `LLM_MODEL` 与账号中的模型名一致（`deepseek-flash` / `deepseek-chat`） |
 | 报 `readonly database` | 检查 `storage/` 权限，或在 `.env` 用 `CHROMA_DIR` 指向英文无空格路径 |
 | 检索结果为空 | 确认已执行 `ingest.py`，并检查版本是否过滤掉了内容 |
+
+## License
+
+MIT，见 [LICENSE](LICENSE)。
