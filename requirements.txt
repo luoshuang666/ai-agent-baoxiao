@@ -1,0 +1,21 @@
+# 默认装最新版：代码里的 Agent 入口有双世代兼容层，0.3 与 1.x 都能跑。
+#
+# 我验证过的稳定组合（若要严格复现当时的结果，按这组装）：
+#   langchain==0.3.*        langchain-core==0.3.*   langchain-openai==0.2.*
+#   langchain-chroma==0.2.* langgraph==0.2.*       chromadb==0.5.*
+#
+# 装最新版如果撞上 langchain-core 版本冲突（pip 刷 resolver 报错），
+# 就退回上面那组 pin 的版本，能跑通优先。
+langchain>=0.3
+langchain-openai>=0.2
+langchain-chroma>=0.1
+langgraph>=0.2
+chromadb>=0.5
+rank-bm25>=0.2.2
+jieba>=0.42
+pandas>=2.0
+streamlit>=1.40
+python-dotenv>=1.0
+
+# 可选：只有标准表用 .xlsx 而不是 .csv 时才需要
+# openpyxl>=3.1

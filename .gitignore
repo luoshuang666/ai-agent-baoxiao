@@ -1,0 +1,24 @@
+# 密钥：绝不能提交到 GitHub
+.env
+.env.local
+
+# 向量库与索引清单（可重建，不占仓库体积）
+storage/
+*.sqlite3
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# 编辑器 / 系统
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# 评测与调试的临时产物
+eval_report.*
+*.log

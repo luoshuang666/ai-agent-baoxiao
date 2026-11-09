@@ -1,0 +1,30 @@
+{"id": "q01", "question": "我下周去上海出差，住宿费能报多少？", "answerable": true, "doc": "差旅费管理制度_v2025.md", "gold_clause": "3.2 住宿费", "must_contain": ["600"], "version": "2025"}
+{"id": "q02", "question": "出差的住宿标准是怎么规定的？", "answerable": true, "doc": "差旅费管理制度_v2025.md", "gold_clause": "3.2 住宿费", "version": "2025"}
+{"id": "q03", "question": "餐补一天多少钱？", "answerable": true, "doc": "差旅费管理制度_v2025.md", "gold_clause": "3.3 餐费补贴", "must_contain": ["120"], "version": "2025"}
+{"id": "q04", "question": "出差的时候打车费一天最多报多少？", "answerable": true, "doc": "差旅费管理制度_v2025.md", "gold_clause": "3.4 市内交通费", "must_contain": ["80"], "version": "2025"}
+{"id": "q05", "question": "出差回来多久之内要提交报销？", "answerable": true, "doc": "差旅费管理制度_v2025.md", "gold_clause": "4.2 提交时限", "must_contain": ["15"], "version": "2025"}
+{"id": "q06", "question": "住宿发票要开专票还是普票？", "answerable": true, "doc": "发票管理规定.md", "gold_clause": "发票类型", "version": "2025"}
+{"id": "q07", "question": "发票抬头和税号怎么填？", "answerable": true, "doc": "发票管理规定.md", "gold_clause": "抬头与税号", "version": "2025"}
+{"id": "q08", "question": "住宿费超标了还能报吗？", "answerable": true, "doc": "差旅费管理制度_v2025.md", "gold_clause": "4.3 超标处理", "version": "2025"}
+{"id": "q09", "question": "出差申请要提前几天提交？", "answerable": true, "doc": "差旅费管理制度_v2025.md", "gold_clause": "2.2 审批时限", "must_contain": ["3"], "version": "2025"}
+{"id": "q10", "question": "新一线城市都包括哪些？", "answerable": true, "doc": "差旅费管理制度_v2025.md", "gold_clause": "3.1 城市分级", "version": "2025"}
+{"id": "q11", "question": "出差首日和末日的餐补怎么算？", "answerable": true, "doc": "差旅费管理制度_v2025.md", "gold_clause": "3.3 餐费补贴", "version": "2025"}
+{"id": "q12", "question": "当天来回的出差有补贴吗？", "answerable": true, "doc": "差旅费管理制度_v2025.md", "gold_clause": "1.2 名词解释", "version": "2025"}
+{"id": "q13", "question": "报销的钱大概多久能到账？", "answerable": true, "doc": "费用报销流程.md", "gold_clause": "结算时限", "version": "2025"}
+{"id": "q14", "question": "报销被驳回了怎么重新提交？", "answerable": true, "doc": "费用报销流程.md", "gold_clause": "驳回与重提", "version": "2025"}
+{"id": "q15", "question": "电子发票可以用吗？", "answerable": true, "doc": "发票管理规定.md", "gold_clause": "发票类型", "version": "2025"}
+{"id": "q16", "question": "网约车的行程单是必须的吗？", "answerable": true, "doc": "发票管理规定.md", "gold_clause": "特殊票据", "version": "2025"}
+{"id": "q17", "question": "实习生出差的报销标准是什么？", "answerable": true, "doc": "差旅费管理制度_v2025.md", "gold_clause": "1.1 适用范围", "version": "2025"}
+{"id": "q18", "question": "出差超过 7 天要找谁审批？", "answerable": true, "doc": "差旅费管理制度_v2025.md", "gold_clause": "2.2 审批时限", "version": "2025"}
+{"id": "q19", "question": "按 2024 年的旧规定，P6 去上海住宿标准是多少？", "answerable": true, "doc": "差旅费管理制度_v2024.md", "gold_clause": "3.2 住宿费", "must_contain": ["500"], "version": "2024"}
+{"id": "q20", "question": "报销单最后要交给哪个部门？", "answerable": true, "doc": "费用报销流程.md", "gold_clause": "提交路径", "version": "2025"}
+{"id": "u01", "question": "公司给员工配笔记本电脑吗？", "answerable": false}
+{"id": "u02", "question": "出差可以坐飞机头等舱吗？", "answerable": false}
+{"id": "u03", "question": "海外出差的补贴标准是多少？", "answerable": false}
+{"id": "u04", "question": "年假有几天？", "answerable": false}
+{"id": "u05", "question": "出差期间受伤算工伤吗？", "answerable": false}
+{"id": "u06", "question": "出差可以带家属一起去吗？", "answerable": false}
+{"id": "u07", "question": "手机话费能报销吗？", "answerable": false}
+{"id": "u08", "question": "住宿可以住民宿或者亲戚家吗？", "answerable": false}
+{"id": "u09", "question": "加班有加班费吗？", "answerable": false}
+{"id": "u10", "question": "打车能直接用公司账户付款吗？", "answerable": false}
